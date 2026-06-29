@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GLT Farms and Export Ltd – Weekly Price List</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     HEADER / BRAND
+════════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-leaf" aria-hidden="true">🌿</div>
+      <div class="brand-text">
+        <h1>GLT FARMS AND EXPORT LTD</h1>
+        <p class="tagline">Fresh Farm Produce – Direct from Farm to Your Doorstep</p>
+      </div>
+    </div>
+    <button class="cart-btn" id="cartToggle" aria-label="View cart">
+      <span class="cart-icon">🛒</span>
+      <span class="cart-label">Cart</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════
+     CONTACT BAR
+════════════════════════════════════════════════════ -->
+<div class="contact-bar">
+  <div class="contact-inner">
+    <a class="contact-item"
+       href="https://maps.google.com/?q=33+Okigade+Okuneye+Street+Mende+Maryland+Lagos+Nigeria"
+       target="_blank" rel="noopener">
+      <span>📍</span>
+      <span>33, Okigade Okuneye Street, Mende, Maryland, Lagos</span>
+    </a>
+    <a class="contact-item" href="tel:+2348055270694">
+      <span>📞</span><span>08055270694</span>
+    </a>
+    <a class="contact-item" href="tel:+2348109717302">
+      <span>📞</span><span>08109717302</span>
+    </a>
+    <a class="contact-item" href="mailto:info@gltfarmsandexport.com">
+      <span>✉️</span><span>info@gltfarmsandexport.com</span>
+    </a>
+    <a class="contact-item" href="mailto:akinyanwola@yahoo.com">
+      <span>✉️</span><span>akinyanwola@yahoo.com</span>
+    </a>
+    <a class="contact-item" href="mailto:akindele@gltfarmsandexport.com">
+      <span>✉️</span><span>akindele@gltfarmsandexport.com</span>
+    </a>
+    <a class="contact-item"
+       href="https://www.instagram.com/gltfarmsandexportltd"
+       target="_blank" rel="noopener">
+      <span>📸</span><span>@gltfarmsandexportltd</span>
+    </a>
+    <a class="contact-item"
+       href="https://www.gltfarmsandexport.com/"
+       target="_blank" rel="noopener">
+      <span>🌐</span><span>www.gltfarmsandexport.com</span>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════════════ -->
+<main class="main-content">
+
+  <div class="price-list-title">
+    <h2>📋 WEEKLY PRICE LIST</h2>
+  </div>
+
+  <!-- ── VEGETABLES ─────────────────────────────────── -->
+  <section class="product-section">
+    <h3 class="section-heading">🥦 VEGETABLES</h3>
+
+    <div class="product-table-wrap">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Unit / Measure</th>
+            <th>Price (₦)</th>
+            <th class="add-col">Add to Cart</th>
+          </tr>
+        </thead>
+        <tbody id="vegTableBody">
+          <!-- rows inserted by app.js -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── FRUITS ─────────────────────────────────────── -->
+  <section class="product-section">
+    <h3 class="section-heading">🍍 FRUITS</h3>
+    <div class="fruits-grid" id="fruitsGrid">
+      <!-- cards inserted by app.js -->
+    </div>
+  </section>
+
+  <!-- ── REQUEST NOTE ───────────────────────────────── -->
+  <section class="request-note">
+    <div class="note-box">
+      <p>
+        <strong>📝 Special / Bulk Orders:</strong>
+        For large quantities, custom requests, or items marked
+        <em>"Price on Request"</em>, please contact us directly via phone or email
+        and we will provide a personalised quote.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── BANK DETAILS ───────────────────────────────── -->
+  <section class="bank-details">
+    <h3 class="section-heading">🏦 PAYMENT DETAILS</h3>
+    <div class="bank-cards">
+      <div class="bank-card">
+        <div class="bank-name">Account Name</div>
+        <div class="bank-value">GLT Farms and Export Ltd</div>
+      </div>
+      <div class="bank-card">
+        <div class="bank-name">UBA</div>
+        <div class="bank-value account-number">1020685093</div>
+      </div>
+      <div class="bank-card">
+        <div class="bank-name">Sterling Bank</div>
+        <div class="bank-value account-number">0096093996</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     CART SIDEBAR
+════════════════════════════════════════════════════ -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-panel" id="cartPanel" aria-label="Shopping cart">
+  <div class="cart-header">
+    <h2>🛒 Your Cart</h2>
+    <button class="close-btn" id="cartClose" aria-label="Close cart">✕</button>
+  </div>
+
+  <div class="cart-empty" id="cartEmpty">
+    <p>Your cart is empty.<br>Select items from the price list to add them.</p>
+  </div>
+
+  <ul class="cart-list" id="cartList"></ul>
+
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total">
+      Total: <strong id="cartTotal">₦0</strong>
+      <span class="total-note" id="totalNote"></span>
+    </div>
+    <button class="btn-primary" id="checkoutBtn">Proceed to Checkout</button>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════
+     CHECKOUT MODAL
+════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="checkoutOverlay">
+  <div class="modal" id="checkoutModal">
+    <div class="modal-header">
+      <h2>Checkout</h2>
+      <button class="close-btn" id="checkoutClose" aria-label="Close">✕</button>
+    </div>
+
+    <!-- Step 1: Customer details -->
+    <div id="stepCustomer">
+      <h3 class="step-title">Step 1 of 2 – Your Details</h3>
+      <form id="customerForm" novalidate>
+        <label>
+          Full Name <span class="req">*</span>
+          <input type="text" id="custName" placeholder="e.g. Amina Okafor" required />
+          <span class="field-err" id="errName"></span>
+        </label>
+        <label>
+          Phone Number <span class="req">*</span>
+          <input type="tel" id="custPhone" placeholder="e.g. 08012345678" required />
+          <span class="field-err" id="errPhone"></span>
+        </label>
+        <label>
+          Email Address <span class="req">*</span>
+          <input type="email" id="custEmail" placeholder="e.g. amina@example.com" required />
+          <span class="field-err" id="errEmail"></span>
+        </label>
+        <button type="submit" class="btn-primary" style="width:100%;margin-top:8px">
+          Continue to Payment →
+        </button>
+      </form>
+    </div>
+
+    <!-- Step 2: Payment instructions -->
+    <div id="stepPayment" style="display:none">
+      <h3 class="step-title">Step 2 of 2 – Make Payment</h3>
+
+      <div class="order-summary-mini" id="orderSummaryMini"></div>
+
+      <div class="payment-instruction">
+        <p class="pay-heading">📤 Transfer to any of these accounts:</p>
+        <div class="pay-accounts">
+          <div class="pay-account">
+            <span class="pay-bank">UBA</span>
+            <span class="pay-num">1020685093</span>
+            <span class="pay-name">GLT Farms and Export Ltd</span>
+          </div>
+          <div class="pay-account">
+            <span class="pay-bank">Sterling Bank</span>
+            <span class="pay-num">0096093996</span>
+            <span class="pay-name">GLT Farms and Export Ltd</span>
+          </div>
+        </div>
+        <p class="pay-note">
+          After transferring, click <strong>"I Have Paid"</strong> below.
+          Our team will verify your payment and confirm your order.
+        </p>
+      </div>
+
+      <div class="checkout-actions">
+        <button class="btn-secondary" id="backToCustomer">← Back</button>
+        <button class="btn-paid" id="iPaidBtn">✅ I Have Paid</button>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div id="stepLoading" style="display:none;text-align:center;padding:30px">
+      <div class="spinner"></div>
+      <p>Submitting your order…</p>
+    </div>
+
+    <!-- Success state -->
+    <div id="stepSuccess" style="display:none;text-align:center;padding:20px">
+      <div class="success-icon">✅</div>
+      <h3 style="color:#2d6a2d">Order Received!</h3>
+      <p id="successMsg"></p>
+      <p style="font-size:13px;color:#555;margin-top:10px">
+        Our team will verify your payment shortly and send you a confirmation email.
+      </p>
+      <button class="btn-primary" id="successClose" style="margin-top:16px">Done</button>
+    </div>
+
+    <!-- Error state -->
+    <div id="stepError" style="display:none;text-align:center;padding:20px">
+      <div style="font-size:40px">⚠️</div>
+      <h3 style="color:#c62828">Something went wrong</h3>
+      <p id="errorMsg" style="color:#555"></p>
+      <button class="btn-primary" id="errorRetry" style="margin-top:16px">Try Again</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
