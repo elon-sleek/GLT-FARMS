@@ -14,9 +14,9 @@ const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 const orders = Object.create(null);
 
 // Only accept well-formed UUIDs for order IDs
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 function isValidOrderId(id) {
-  return typeof id === 'string' && UUID_RE.test(id);
+  return typeof id === 'string' && UUID_REGEX.test(id);
 }
 
 app.use(express.json());
@@ -54,12 +54,13 @@ async function sendEmail(to, subject, html) {
   console.log(`Email sent → ${to} | ${subject}`);
 }
 
-// Strip HTML tags for console logging (character-scan, no regex – avoids ReDoS)
-function stripHtmlTags(html) {
+// Strip HTML tags for console logging (for...of on bounded input – avoids loop-bound-injection)
+function stripHtmlTags(htmlInput) {
+  // Cap at 10 000 chars so iteration is bounded regardless of user-supplied content
+  const html = typeof htmlInput === 'string' ? htmlInput.slice(0, 10000) : '';
   const out = [];
   let inTag = false;
-  for (let i = 0; i < html.length; i++) {
-    const c = html[i];
+  for (const c of html) {
     if (c === '<') { inTag = true; continue; }
     if (c === '>') { inTag = false; continue; }
     if (!inTag) out.push(c);

@@ -481,7 +481,13 @@ function validateCustomer() {
   };
 
   setErr('errName', name.length < 2 ? 'Please enter your full name.' : '');
-  setErr('errPhone', !/^[0-9+\s\-()]{7,15}$/.test(phone) ? 'Please enter a valid phone number.' : '');
+  // Nigerian numbers: 0XXXXXXXXXX (11 digits) or +234XXXXXXXXXX; also allow spaces/hyphens
+  const digits = phone.replace(/[\s\-()+]/g, '');
+  const phoneErr =
+    !/^\d+$/.test(digits) || digits.length < 7 || digits.length > 15
+      ? 'Please enter a valid phone number (digits only, 7–15 figures).'
+      : '';
+  setErr('errPhone', phoneErr);
   setErr('errEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'Please enter a valid email address.' : '');
 
   return valid ? { name, phone, email } : null;
