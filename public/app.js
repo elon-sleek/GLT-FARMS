@@ -481,12 +481,15 @@ function validateCustomer() {
   };
 
   setErr('errName', name.length < 2 ? 'Please enter your full name.' : '');
-  // Nigerian numbers: 0XXXXXXXXXX (11 digits) or +234XXXXXXXXXX; also allow spaces/hyphens
+  // Accept Nigerian format (0XXXXXXXXXX = 11 digits, or +234XXXXXXXXXX = 13 digits)
+  // and common international formats; strip formatting characters before checking.
   const digits = phone.replace(/[\s\-()+]/g, '');
-  const phoneErr =
-    !/^\d+$/.test(digits) || digits.length < 7 || digits.length > 15
-      ? 'Please enter a valid phone number (digits only, 7–15 figures).'
-      : '';
+  const isNigerianLocal = /^0[7-9][01]\d{8}$/.test(digits);          // e.g. 08012345678
+  const isNigerianIntl  = /^234[7-9][01]\d{8}$/.test(digits);        // e.g. 2348012345678
+  const isGenericIntl   = /^\d{7,15}$/.test(digits);                  // generic fallback
+  const phoneErr = !(isNigerianLocal || isNigerianIntl || isGenericIntl)
+    ? 'Please enter a valid phone number (e.g. 08012345678 or +2348012345678).'
+    : '';
   setErr('errPhone', phoneErr);
   setErr('errEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'Please enter a valid email address.' : '');
 

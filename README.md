@@ -26,7 +26,7 @@ customer receives an automated email confirmation.
 
 ### Prerequisites
 
-- **Node.js 18+**
+- **Node.js 18+** (tested on Node.js 18, 20, and 22; newer LTS versions should also work)
 - An SMTP account for sending emails *(optional – emails are printed to the console if not configured)*
 
 ### 1. Install dependencies

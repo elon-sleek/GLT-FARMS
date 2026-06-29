@@ -56,7 +56,9 @@ async function sendEmail(to, subject, html) {
 
 // Strip HTML tags for console logging (for...of on bounded input – avoids loop-bound-injection)
 function stripHtmlTags(htmlInput) {
-  // Cap at 10 000 chars so iteration is bounded regardless of user-supplied content
+  // Cap at 10 000 chars to bound iteration when email body is built from user-supplied content.
+  // Content beyond this limit is silently truncated in the console log only;
+  // the full HTML is always sent to the email recipient unchanged.
   const html = typeof htmlInput === 'string' ? htmlInput.slice(0, 10000) : '';
   const out = [];
   let inTag = false;
