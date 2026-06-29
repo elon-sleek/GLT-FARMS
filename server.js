@@ -9,8 +9,15 @@ const PORT = process.env.PORT || 3000;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'akinyanwola@yahoo.com';
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
-// In-memory order store (simple – no database needed for this use case)
-const orders = {};
+// In-memory order store – keyed by UUID, stored in a null-prototype object
+// to prevent prototype pollution via __proto__ or constructor keys.
+const orders = Object.create(null);
+
+// Only accept well-formed UUIDs for order IDs
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+function isValidOrderId(id) {
+  return typeof id === 'string' && UUID_RE.test(id);
+}
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -36,13 +43,28 @@ async function sendEmail(to, subject, html) {
     console.log('\n=== EMAIL (SMTP not configured – logging instead) ===');
     console.log('To     :', to);
     console.log('Subject:', subject);
-    console.log('Body   :\n', html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim());
+    // Strip HTML for console display using a character-scan to avoid ReDoS
+    const bodyText = stripHtmlTags(html).replace(/\s+/g, ' ').trim();
+    console.log('Body   :\n', bodyText);
     console.log('=====================================================\n');
     return;
   }
   const from = process.env.SMTP_FROM || process.env.SMTP_USER;
   await transporter.sendMail({ from, to, subject, html });
   console.log(`Email sent → ${to} | ${subject}`);
+}
+
+// Strip HTML tags for console logging (character-scan, no regex – avoids ReDoS)
+function stripHtmlTags(html) {
+  const out = [];
+  let inTag = false;
+  for (let i = 0; i < html.length; i++) {
+    const c = html[i];
+    if (c === '<') { inTag = true; continue; }
+    if (c === '>') { inTag = false; continue; }
+    if (!inTag) out.push(c);
+  }
+  return out.join('');
 }
 
 // ─── Order helpers ────────────────────────────────────────────────────────────
@@ -143,14 +165,18 @@ app.post('/api/orders', async (req, res) => {
 
 // GET /api/orders/:orderId  – fetch order for admin page
 app.get('/api/orders/:orderId', (req, res) => {
-  const order = orders[req.params.orderId];
+  const { orderId } = req.params;
+  if (!isValidOrderId(orderId)) return res.status(400).json({ error: 'Invalid order ID.' });
+  const order = orders[orderId];
   if (!order) return res.status(404).json({ error: 'Order not found.' });
   res.json(order);
 });
 
 // POST /api/confirm/:orderId  – admin confirms payment; notifies customer
 app.post('/api/confirm/:orderId', async (req, res) => {
-  const order = orders[req.params.orderId];
+  const { orderId } = req.params;
+  if (!isValidOrderId(orderId)) return res.status(400).json({ error: 'Invalid order ID.' });
+  const order = orders[orderId];
   if (!order) return res.status(404).json({ error: 'Order not found.' });
   if (order.status === 'confirmed') {
     return res.json({ success: true, message: 'Already confirmed.' });
